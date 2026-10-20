@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>COORDENADAS OCULTAS | Revista Interactiva - ENES Juriquilla</title>
+  <style>
+    :root {
+      --bg-dark: #0a0e14;
+      --panel-bg: #121924;
+      --accent-amber: #ffb000;
+      --accent-cyan: #00e5ff;
+      --text-main: #e6edf3;
+      --text-muted: #8b949e;
+      --border-grid: #263245;
+      --terminal-green: #39ff14;
+    }
+    
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      font-family: 'Courier New', Courier, monospace;
+      line-height: 1.6;
+      background-image: radial-gradient(var(--border-grid) 1px, transparent 1px);
+      background-size: 24px 24px;
+      /* Previene el scroll horizontal en móviles */
+      overflow-x: hidden; 
+    }
+    
+    header {
+      border-bottom: 2px solid var(--accent-amber);
+      padding: clamp(1.5rem, 5vw, 3rem) 1.5rem;
+      text-align: center;
+      background: linear-gradient(180deg, rgba(255,176,0,0.12) 0%, rgba(10,14,20,0.95) 100%);
+    }
+    
+    .tag-institucional {
+      color: var(--accent-cyan);
+      font-size: 0.85rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 0.8rem;
+      display: inline-block;
+    }
+    
+    h1 {
+      /* Texto fluido: se adapta automáticamente entre 1.8rem y 2.6rem */
+      font-size: clamp(1.8rem, 4vw, 2.6rem);
+      color: var(--accent-amber);
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      margin-bottom: 0.8rem;
+      text-shadow: 0 0 10px rgba(255, 176, 0, 0.3);
+    }
+    
+    .subtitle {
+      max-width: 750px;
+      margin: 0 auto;
+      color: var(--text-muted);
+      font-size: clamp(0.95rem, 2vw, 1.05rem);
+    }
+    
+    .container {
+      max-width: 1000px;
+      margin: 2rem auto;
+      padding: 0 1.5rem;
+      display: grid;
+      gap: 2rem;
+    }
+    
+    .card {
+      background: var(--panel-bg);
+      border: 1px solid var(--border-grid);
+      border-left: 4px solid var(--accent-amber);
+      padding: clamp(1.2rem, 3vw, 1.8rem);
+      border-radius: 4px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+    }
+    
+    .card h2 {
+      color: var(--accent-cyan);
+      margin-bottom: 1rem;
+      font-size: clamp(1.2rem, 2.5vw, 1.4rem);
+      border-bottom: 1px dashed var(--border-grid);
+      padding-bottom: 0.5rem;
+    }
+    
+    .timeline-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.2rem;
+      margin-top: 1.5rem;
+    }
+    
+    .step-box {
+      background: rgba(0,0,0,0.35);
+      border: 1px solid var(--border-grid);
+      padding: 1.2rem;
+      border-radius: 4px;
+      transition: transform 0.2s ease;
+    }
+    
+    .step-box:hover {
+      transform: translateY(-3px);
+      border-color: var(--accent-amber);
+    }
+    
+    .step-year {
+      color: var(--accent-amber);
+      font-weight: bold;
+      font-size: 1.1rem;
+      margin-bottom: 0.5rem;
+    }
+    
+    /* Simulador Interactivo IBM 7030 */
+    .terminal-box {
+      background: #05070a;
+      border: 2px solid var(--accent-cyan);
+      padding: clamp(1.2rem, 3vw, 1.8rem);
+      border-radius: 6px;
+      box-shadow: 0 0 15px rgba(0, 229, 255, 0.1);
+    }
+    
+    .terminal-header {
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      color: var(--accent-cyan);
+      border-bottom: 1px solid var(--border-grid);
+      padding-bottom: 0.5rem;
+      margin-bottom: 1.2rem;
+      font-size: 0.9rem;
+      font-weight: bold;
+    }
+    
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.8rem;
+      margin: 1.5rem 0;
+    }
+    
+    button {
+      background: var(--accent-amber);
+      color: #000;
+      border: none;
+      /* Área táctil mejorada para móviles */
+      padding: 0.8rem 1.2rem; 
+      font-family: inherit;
+      font-weight: bold;
+      cursor: pointer;
+      border-radius: 3px;
+      transition: all 0.2s;
+      flex: 1 1 200px; /* Crecen y se adaptan al espacio */
+      font-size: 0.9rem;
+    }
+    
+    button:hover, button:active {
+      background: var(--accent-cyan);
+      transform: scale(0.98);
+    }
+    
+    .output-screen {
+      background: #0a1017;
+      border: 1px solid #1f2a38;
+      padding: 1.2rem;
+      color: var(--terminal-green);
+      min-height: 140px;
+      font-size: 0.95rem;
+      white-space: pre-wrap; /* Permite el ajuste de línea automático */
+      text-shadow: 0 0 5px rgba(57, 255, 20, 0.4);
+      box-shadow: inset 0 0 10px rgba(0,0,0,0.8);
+      position: relative;
+    }
+
+    /* Animación del cursor parpadeante */
+    .cursor::after {
+      content: '█';
+      animation: blink 1s step-end infinite;
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0; }
+    }
+    
+    footer {
+      text-align: center;
+      padding: 2rem 1.5rem;
+      border-top: 1px solid var(--border-grid);
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-top: 4rem;
+      background: #05070a;
+    }
+
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="tag-institucional">ENES Juriquilla UNAM • Temas Selectos en Perspectiva de Género I • Edición N° 1</div>
+    <h1>Coordenadas Ocultas</h1>
+    <p class="subtitle">Gladys West: De la recolección de tabaco bajo la segregación racial a programar los algoritmos geodésicos del GPS en supercomputadoras.</p>
+  </header>
+
+  <main class="container">
+    <section class="card">
+      <h2>01 // Editorial: Descolonizar la Memoria del Código</h2>
+      <p>
+        [Inserta aquí tu reflexión editorial conectando la Ingeniería en Computación con la visibilización histórica de las mujeres afrodescendientes en las ciencias computacionales].
+      </p>
+    </section>
+
+    <section class="card">
+      <h2>02 // Matriz de Opresión y Resistencia: Línea de Vida</h2>
+      <div class="timeline-grid">
+        <div class="step-box">
+          <div class="step-year">1930 • Condado de Dinwiddie, VA</div>
+          <p>Nace en una comunidad agrícola. Trabaja en campos de tabaco bajo el régimen de segregación Jim Crow. Comprende que la educación matemática es la única vía para romper el destino impuesto por raza, clase y género.</p>
+        </div>
+        <div class="step-box">
+          <div class="step-year">1956 • Base Naval de Dahlgren</div>
+          <p>Segunda mujer afrodescendiente contratada como matemática y programadora en la base. Programa supercomputadoras como la <strong>IBM 7030 Stretch</strong> en lenguaje ensamblador y FORTRAN.</p>
+        </div>
+        <div class="step-box">
+          <div class="step-year">Años 70–80 • El Algoritmo del Geoide</div>
+          <p>Procesa datos de satélites (GEOS-3 y Seasat) mediante algoritmos complejos que corrigen distorsiones gravitacionales y mareales para modelar la forma exacta de la Tierra, cimiento directo del GPS.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>03 // Análisis desde la Interseccionalidad</h2>
+      <p>
+        [Redacta aquí tu análisis articulando los conceptos de interseccionalidad (Viveros Vigoya, 2016; Golubov, 2017) y sistema sexo-género (Scott, 2013) aplicados al borrado histórico de las mujeres programadoras].
+      </p>
+    </section>
+
+    <section class="terminal-box">
+      <div class="terminal-header">
+        <span>TERMINAL IBM 7030 "STRETCH" // SIMULADOR GEODÉSICO</span>
+        <span>ESTADO: EN LÍNEA</span>
+      </div>
+      <p style="margin-bottom: 0.5rem;">Interactúa con los módulos de cálculo satelital de Gladys West para descubrir cómo cada corrección matemática reveló también una estructura de desigualdad que ella superó:</p>
+      
+      <div class="controls">
+        <button onclick="ejecutarModulo(1)">[1] Calibrar Órbita Satelital</button>
+        <button onclick="ejecutarModulo(2)">[2] Calcular Geoide Terrestre</button>
+        <button onclick="ejecutarModulo(3)">[3] Compilar Precisión GPS</button>
+      </div>
+      
+      <div id="consola-container" class="output-screen">
+        <span id="consola">> Sistema inicializado. Selecciona un módulo de ejecución arriba...</span><span class="cursor"></span>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p><strong>Elaborado por:</strong> [Tu Nombre Completo] • Estudiante de Ingeniería en Computación, ENES Juriquilla UNAM (2026).</p>
+    <p style="margin-top: 0.8rem; font-size: 0.75rem; opacity: 0.8;">
+      <em>Nota al pie sobre el uso de IA:</em> En cumplimiento con el programa de la asignatura Temas Selectos en Perspectiva de Género I, se declara que se utilizó asistencia de Inteligencia Artificial para la maquetación de la estructura HTML/CSS del simulador interactivo, lluvia de ideas y revisión de lenguaje incluyente. El análisis teórico y las reflexiones críticas fueron redactadas por el estudiante.
+    </p>
+  </footer>
+
+  <script>
+    // Variable global para almacenar el temporizador y evitar sobreescrituras si se presiona muy rápido
+    let typewriterTimeout;
+
+    function ejecutarModulo(mod) {
+      const consola = document.getElementById('consola');
+      
+      // Limpiamos el intervalo anterior si existe
+      if (typewriterTimeout) {
+        clearTimeout(typewriterTimeout);
+      }
+      
+      let textoCompleto = "";
+
+      if (mod === 1) {
+        textoCompleto = "> EJECUTANDO CORRECCIÓN GRAVITACIONAL [LAT: 20.7042° N, LON: 100.4475° W - JURIQUILLA]...\n\n" +
+          "> DATO TÉCNICO: Gladys West procesó millones de mediciones de altimetría por radar del proyecto Seasat.\n\n" +
+          "> DATO SOCIAL: Mientras calculaba órbitas globales, las leyes de segregación le prohibían alojarse en hoteles oficiales durante congresos científicos.";
+      } else if (mod === 2) {
+        textoCompleto = "> COMPILANDO MODELO DEL GEOIDE EN IBM 7030...\n\n" +
+          "> DATO TÉCNICO: La Tierra no es una esfera perfecta; es un elipsoide irregular deformado por fuerzas centrífugas.\n\n" +
+          "> DATO DE GÉNERO: Su trabajo fue catalogado durante décadas como 'apoyo técnico' subordinado, invisibilizando su autoría intelectual hasta el siglo XXI.";
+      } else {
+        textoCompleto = "> SINCRONIZACIÓN GPS COMPLETADA CON ÉXITO (ERROR < 1 cm)...\n\n" +
+          "> LEGADO: Recién en 2018 (a los 88 años) fue incorporada al Salón de la Fama del Espacio y Misiles de la Fuerza Aérea de EE. UU.\n\n" +
+          "> REFLEXIÓN: Cada vez que abrimos un mapa digital en Linux, Android o iOS, ejecutamos la herencia matemática de Gladys West.";
+      }
+
+      // Iniciamos el efecto de máquina de escribir
+      consola.textContent = "";
+      let i = 0;
+      
+      function escribirCaracter() {
+        if (i < textoCompleto.length) {
+          consola.textContent += textoCompleto.charAt(i);
+          i++;
+          // Ajusta este número (15) para cambiar la velocidad de escritura (menor es más rápido)
+          typewriterTimeout = setTimeout(escribirCaracter, 15);
+        }
+      }
+      
+      escribirCaracter();
+    }
+  </script>
+</body>
+</html>
